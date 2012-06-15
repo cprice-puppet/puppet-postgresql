@@ -45,19 +45,10 @@ class postgresql::params {
     }
 
     'Debian': {
-      case $::operatingsystem {
-        'Debian': {
-            $service_name       = "postgresql"
-        }
-
-        'Ubuntu': {
-            $service_name       = "postgresql-${::postgres_default_version}"
-        }
-      }
-
+      $service_name             = "postgresql"
       $client_package_name      = 'postgresql-client'
       $server_package_name      = 'postgresql'
-      $needs_initdb             = false
+      $needs_initdb             = true
       $initdb_path              = "/usr/lib/postgresql/${::postgres_default_version}/bin/initdb"
       $createdb_path            = "/usr/lib/postgresql/${::postgres_default_version}/bin/createdb"
       $psql_path                = "/usr/lib/postgresql/${::postgres_default_version}/bin/psql"
