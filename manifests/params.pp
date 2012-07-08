@@ -45,7 +45,13 @@ class postgresql::params {
     }
 
     'Debian': {
-      $service_name             = "postgresql-${::postgres_default_version}"
+      if $::operatingsystemrelease =~ /wheezy/ {
+        $service_name             = "postgresql"
+      }
+      else
+      {
+        $service_name             = "postgresql-${::postgres_default_version}"
+      }
       $client_package_name      = 'postgresql-client'
       $server_package_name      = 'postgresql'
       $needs_initdb             = false
