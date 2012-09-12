@@ -19,6 +19,10 @@ class postgresql::params {
   # TODO: figure out a way to make this not platform-specific
   $manage_redhat_firewall       = false
 
+  if ($::postgres_default_version == undef) {
+    fail "No value for postgres_default_version facter fact; it's possible that you don't have pluginsync enabled."
+  }
+
   case $::operatingsystem {
     "Ubuntu": {
       $service_provider = upstart
@@ -51,7 +55,11 @@ class postgresql::params {
         }
 
         'Ubuntu': {
-            $service_name       = "postgresql-${::postgres_default_version}"
+            case $::lsbmajdistrelease {
+                # thanks, ubuntu
+                '10':       { $service_name = "postgresql-${::postgres_default_version}" }
+                default:    { $service_name = "postgresql" }
+            }
         }
       }
 
