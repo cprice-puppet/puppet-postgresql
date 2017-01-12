@@ -53,14 +53,21 @@ class postgresql::config::beforeservice(
     notify      => Service['postgresqld'],
   }
 
+  file { 'postgresql.conf':
+     ensure      => file,
+     path        => $postgresql_conf_path,
+     content     => template("postgresql/postgresql.conf.erb"),
+     notify      => Service['postgresqld'],
+   }
+
   # We must set a "listen_addresses" line in the postgresql.conf if we
   #  want to allow any connections from remote hosts.
-  file_line { 'postgresql.conf':
-    path        => $postgresql_conf_path,
-    match       => '^listen_addresses\s*=.*$',
-    line        => "listen_addresses = '${listen_addresses}'",
-    notify      => Service['postgresqld'],
-  }
+  # file_line { 'postgresql.conf':
+  #        path        => $postgresql_conf_path,
+  #        match       => '^listen_addresses\s*=.*$',
+  #        line        => "listen_addresses = '${listen_addresses}'",
+  #        notify      => Service['postgresqld'],
+  #      }
 
   # TODO: is this a reasonable place for this firewall stuff?
   # TODO: figure out a way to make this not platform-specific; debian and ubuntu have
